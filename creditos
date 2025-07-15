@@ -1,0 +1,15 @@
+const ramos = [
+  { id: "BIOL034", nombre: "Biología Celular", semestre: 1, requisitos: [], creditos: 8 },
+  { id: "BIOL035", nombre: "Lab. Biocel.", semestre: 1, requisitos: [], creditos: 6 },
+  { id: "DEBD221", nombre: "Zoología", semestre: 1, requisitos: [], creditos: 8 },
+  { id: "QUI002", nombre: "Química General", semestre: 1, requisitos: [], creditos: 8 },
+  { id: "FMMP003", nombre: "Matemáticas", semestre: 1, requisitos: [], creditos: 8 },
+  { id: "MVET611", nombre: "Intro. Med. Vet", semestre: 1, requisitos: [], creditos: 10 },
+
+  { id: "BIOL166", nombre: "Bioquímica", semestre: 2, requisitos: ["BIOL034", "BIOL035", "QUI002"], creditos: 8 },
+  { id: "MVET621", nombre: "ADO I", semestre: 2, requisitos: ["BIOL034", "BIOL035"], creditos: 18 },
+  { id: "MVET622", nombre: "Cuerpo Animal I", semestre: 2, requisitos: ["BIOL034", "BIOL035", "DEBD221"], creditos: 19 },
+  { id: "ING119", nombre: "Inglés I", semestre: 2, requisitos: [], creditos: 12 },
+  
+  // Continúa agregando créditos a los demás cursos...
+];
