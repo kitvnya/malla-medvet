@@ -22,42 +22,70 @@ const ramos = [
   { id: "DEBD140", nombre: "Ecología General", semestre: 4, requisitos: ["DEBD130"] },
   { id: "MVET178", nombre: "Genética", semestre: 4, requisitos: ["BIOL166", "DEBD130"] },
   { id: "ING239", nombre: "Inglés III", semestre: 4, requisitos: ["ING129"] },
-
-  // Puedes continuar con el resto...
-
 ];
 
-// Estado de cursos aprobados
+// 1. Construimos índice rápido
+const mapaCursos = {};
+ramos.forEach(r => mapaCursos[r.id] = r);
+
+// 2. Calculamos dependientes (qué ramos desbloquea cada uno)
+ramos.forEach(r => {
+  r.dependientes = [];
+});
+ramos.forEach(r => {
+  r.requisitos.forEach(req => {
+    if (mapaCursos[req]) {
+      mapaCursos[req].dependientes.push(r.id);
+    }
+  });
+});
+
 const aprobados = new Set();
+const container = document.getElementById("malla-container");
 
-const malla = document.getElementById("malla");
-
-// Generar cursos por semestre
+// Generar interfaz agrupada por semestre
 for (let sem = 1; sem <= 10; sem++) {
-  ramos.filter(c => c.semestre === sem).forEach(curso => {
+  const semDiv = document.createElement("div");
+  semDiv.className = "semestre";
+
+  const titulo = document.createElement("h2");
+  titulo.textContent = `${sem}° Semestre`;
+  semDiv.appendChild(titulo);
+
+  const cursosDiv = document.createElement("div");
+  cursosDiv.className = "cursos";
+
+  ramos.filter(r => r.semestre === sem).forEach(curso => {
     const div = document.createElement("div");
     div.className = "curso bloqueado";
     div.dataset.id = curso.id;
     div.dataset.requisitos = JSON.stringify(curso.requisitos);
+    div.dataset.dependientes = JSON.stringify(curso.dependientes);
     div.textContent = curso.nombre;
 
     div.addEventListener("click", () => {
       const requisitos = JSON.parse(div.dataset.requisitos);
+      const id = curso.id;
+
       const todosCumplidos = requisitos.every(req => aprobados.has(req));
+      if (!todosCumplidos || aprobados.has(id)) return;
 
-      if (!todosCumplidos || aprobados.has(curso.id)) return;
-
-      aprobados.add(curso.id);
+      // Marcar como aprobado
+      aprobados.add(id);
       div.classList.remove("bloqueado");
       div.classList.add("aprobado");
 
       actualizarDisponibles();
     });
 
-    malla.appendChild(div);
+    cursosDiv.appendChild(div);
   });
+
+  semDiv.appendChild(cursosDiv);
+  container.appendChild(semDiv);
 }
 
+// Función para desbloquear visualmente
 function actualizarDisponibles() {
   document.querySelectorAll(".curso").forEach(div => {
     const requisitos = JSON.parse(div.dataset.requisitos);
