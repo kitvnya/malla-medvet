@@ -1,0 +1,2 @@
+div.textContent = curso.nombre;
+div.title = `${curso.nombre} - Créditos: ${curso.creditos}`;
